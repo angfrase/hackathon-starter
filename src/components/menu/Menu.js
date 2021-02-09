@@ -18,7 +18,7 @@ class Menu extends React.Component {
   render() {
     return (
       <div className="Menu">
-        <h1> TECH TALK</h1>
+        <h1> DEV TALK</h1>
         {this.props.isAuthenticated && (
           <div id="menu-links">
             <Link to="/" onClick={this.handleLogout}>
