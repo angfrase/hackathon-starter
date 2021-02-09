@@ -12,32 +12,31 @@ class Messages extends React.Component {
     this.state = {
       messages: [],
       message: '',
-      Like:0,
-      Unlike:0,
+      addLike:0,
+      removeLike:0,
       count: 0,
       image: ''
+      
     }
   }
 
 
-    likeHandler=()=>{
-      console.log('Like!')
+    addLike = (messageId)=>{
+       this.props.addLike(messageId).then(() => {
+        this.fetchMessages(); 
 
-        this.setState((state,props) => ({
-            like:state.like +1,
-        }))
-
-    }
+    })
+  }
 
 
-    unlikeHandler=()=>{
-      console.log('Unlike!')
+    removeLike = (likeId)=>{
+      
+      this.props.removeLike(likeId).then(() => {
+        this.fetchMessages(); 
+        
 
-        this.setState((state,props) => ({
-            Unlike:state.Unlike +1,
-        }))
-
-    }
+    })
+  }
 
 
   componentDidMount() {
@@ -77,6 +76,13 @@ class Messages extends React.Component {
     })
   }
 
+  deleteMessage = (messageId) => {
+    
+    this.props.deleteMessage(messageId).then(() => {
+      this.fetchMessages();
+      
+    })
+  }
 
   handleChange = (event) => {
     let data = {...this.state}; 
@@ -85,17 +91,24 @@ class Messages extends React.Component {
     
 
   }
+  
 
   render() {
+   
     let display = (<div>No Messages Found</div>)
     if (this.state.messages) {
       display = this.state.messages.map((value) => {
+        console.log(value)
         return (
-          <li key={value.id}>{value.text}</li>
+          <li key={value.id}><button onClick={()=> this.deleteMessage (value.id)}>delete</button>
+          <button onClick ={()=> this.addLike(value.id)}>Like!</button>
+          <button onClick ={()=> this.removeLike(value.likes[0].id)}>Unlike!</button>
+          {value.text}
+          </li>
         )
       })
     }
-
+    
     return (
       <div className="Messages">
         <div className="ListMessage">
@@ -106,10 +119,7 @@ class Messages extends React.Component {
           <button onClick={this.newMessageHandler}> Send Message </button>
         </div>
 
-        <div className="tab">    
-        <button onClick ={this.likeHandler}>Like!</button>
-        <button onClick ={this.unlikeHandler}>Unlike!</button>
-        </div>
+        
 
       </div>
     );
