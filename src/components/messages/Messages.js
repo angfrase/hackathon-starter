@@ -46,6 +46,7 @@ class Messages extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     let display = (<div>No Messages Found</div>)
     if (this.state.messages) {
       display = this.state.messages.map((value) => {
