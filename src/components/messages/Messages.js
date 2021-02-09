@@ -1,5 +1,9 @@
 import React from "react";
 import { withAsyncAction } from "../../redux/HOCs";
+import "./Messages.css";
+
+
+
 
 class Messages extends React.Component {
   constructor(props) {
@@ -8,10 +12,33 @@ class Messages extends React.Component {
     this.state = {
       messages: [],
       message: '',
+      Like:0,
+      Unlike:0,
       count: 0,
       image: ''
     }
   }
+
+
+    likeHandler=()=>{
+      console.log('Like!')
+
+        this.setState((state,props) => ({
+            like:state.like +1,
+        }))
+
+    }
+
+
+    unlikeHandler=()=>{
+      console.log('Unlike!')
+
+        this.setState((state,props) => ({
+            Unlike:state.Unlike +1,
+        }))
+
+    }
+
 
   componentDidMount() {
     this.fetchMessages();
@@ -21,7 +48,7 @@ class Messages extends React.Component {
     this.props.getMessage(this.props.username).then((res) => {
       console.log(res.payload)
       this.setState({
-        messages: res.payload.messages,
+        messages:res.payload.messages,
         count: res.payload.count
       })
     })
@@ -33,16 +60,30 @@ class Messages extends React.Component {
       this.fetchMessages();
       this.setState({
         message: ''
+    
+      })
+    })
+  }
+  
+
+  createNewMessage = () => {
+    let text = this.state.message;
+    this.props.createNewMessage(text).then(() => {
+      this.fetchMessages();
+      this.setState({
+        message: 'Like!'
+    
       })
     })
   }
 
-  handleChange = (event) => {
-    let data = {...this.state};
-   
-    data[event.target.name] = event.target.value;   
 
+  handleChange = (event) => {
+    let data = {...this.state}; 
+    data[event.target.name] = event.target.value;   
     this.setState(data);
+    
+
   }
 
   render() {
@@ -64,6 +105,12 @@ class Messages extends React.Component {
           <input name="message" onChange={this.handleChange} value={this.state.message}/>
           <button onClick={this.newMessageHandler}> Send Message </button>
         </div>
+
+        <div className="tab">    
+        <button onClick ={this.likeHandler}>Like!</button>
+        <button onClick ={this.unlikeHandler}>Unlike!</button>
+        </div>
+
       </div>
     );
   }
