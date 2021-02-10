@@ -1,5 +1,9 @@
 import React from "react";
 import { withAsyncAction } from "../../redux/HOCs";
+import "./Messages.css";
+
+
+
 
 class Messages extends React.Component {
   constructor(props) {
@@ -8,10 +12,32 @@ class Messages extends React.Component {
     this.state = {
       messages: [],
       message: '',
+      addLike:0,
+      removeLike:0,
       count: 0,
       image: ''
+      
     }
   }
+
+
+    addLike = (messageId)=>{
+       this.props.addLike(messageId).then(() => {
+        this.fetchMessages(); 
+
+    })
+  }
+
+
+    removeLike = (likeId)=>{
+      
+      this.props.removeLike(likeId).then(() => {
+        this.fetchMessages(); 
+        
+
+    })
+  }
+
 
   componentDidMount() {
     this.fetchMessages();
@@ -21,7 +47,7 @@ class Messages extends React.Component {
     this.props.getMessage(this.props.username).then((res) => {
       console.log(res.payload)
       this.setState({
-        messages: res.payload.messages,
+        messages:res.payload.messages,
         count: res.payload.count
       })
     })
@@ -33,29 +59,60 @@ class Messages extends React.Component {
       this.fetchMessages();
       this.setState({
         message: ''
+    
+      })
+    })
+  }
+  
+
+  createNewMessage = () => {
+    let text = this.state.message;
+    this.props.createNewMessage(text).then(() => {
+      this.fetchMessages();
+      this.setState({
+        message: 'Like!'
+    
       })
     })
   }
 
-  handleChange = (event) => {
-    let data = {...this.state};
-   
-    data[event.target.name] = event.target.value;   
-
-    this.setState(data);
+  deleteMessage = (messageId) => {
+    
+    this.props.deleteMessage(messageId).then(() => {
+      this.fetchMessages();
+      
+    })
   }
 
+  handleChange = (event) => {
+    let data = {...this.state}; 
+    data[event.target.name] = event.target.value;   
+    this.setState(data);
+    
+
+  }
+  
+
   render() {
+<<<<<<< HEAD
     console.log(this.state)
+=======
+   
+>>>>>>> bcc4308b8f6fabc1393d038ed9db9789fb9cef33
     let display = (<div>No Messages Found</div>)
     if (this.state.messages) {
       display = this.state.messages.map((value) => {
+        console.log(value)
         return (
-          <li key={value.id}>{value.text}</li>
+          <li key={value.id}><button onClick={()=> this.deleteMessage (value.id)}>delete</button>
+          <button onClick ={()=> this.addLike(value.id)}>Like!</button>
+          <button onClick ={()=> this.removeLike(value.likes[0].id)}>Unlike!</button>
+          {value.text}
+          </li>
         )
       })
     }
-
+    
     return (
       <div className="Messages">
         <div className="ListMessage">
@@ -65,6 +122,9 @@ class Messages extends React.Component {
           <input name="message" onChange={this.handleChange} value={this.state.message}/>
           <button onClick={this.newMessageHandler}> Send Message </button>
         </div>
+
+        
+
       </div>
     );
   }

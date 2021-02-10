@@ -1,6 +1,6 @@
 .Menu {
   background-color: rgb(243, 239, 28);
-  display: flex;
+  display:flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1em;
@@ -18,3 +18,5 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+
